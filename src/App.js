@@ -6,6 +6,7 @@ import "monday-ui-react-core/dist/main.css";
 import AttentionBox from "monday-ui-react-core/dist/AttentionBox.js";
 import { transformData } from "./utils/transformData";
 import Loader from "./components/loader/Loader";
+import Graph from "./components/graph/Graph";
 
 const monday = mondaySdk();
 
@@ -13,6 +14,8 @@ const App = () => {
   const [context, setContext] = useState();
 
   const [loading, setLoading] = useState(true);
+
+  const [data, setData] = useState();
 
   // Fetch all items with cursor-based pagination
   const fetchAllItems = async (boardId, items = [], cursor = null) => {
@@ -116,32 +119,15 @@ const App = () => {
         ],
       };
 
-      console.log("fullData", fullData.boards[0].items_page.items);
-
       // // Call transformData with all items
       const transformedData = transformData(fullData);
+      setData(transformedData);
       setLoading(false);
-      console.log("transformedData", transformedData);
     });
   }, []);
 
-  const attentionBoxText = `Hello, your user_id is: ${
-    context ? context.user.id : "still loading"
-  }.
-  Let's start building your amazing app, which will change the world!`;
-
   return (
-    <div className="App">
-      {loading ? (
-        <Loader />
-      ) : (
-        <AttentionBox
-          title="Hello Monday Apps!"
-          text={attentionBoxText}
-          type="success"
-        />
-      )}
-    </div>
+    <div className="App">{loading ? <Loader /> : <Graph data={data} />}</div>
   );
 };
 

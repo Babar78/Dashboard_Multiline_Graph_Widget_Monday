@@ -15,7 +15,6 @@ export const transformData = (mondayResData) => {
     const group = item.group.title;
 
     item.column_values.forEach((itemData) => {
-      console.log("Called");
       // check if the items object already has the key
       if (!graphData[group].items[itemData.column.title]) {
         graphData[group].items[itemData.column.title] = {
