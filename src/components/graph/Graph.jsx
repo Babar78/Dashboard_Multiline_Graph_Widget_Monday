@@ -1,77 +1,20 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
+import { generateDataset } from "../../utils/generateDataset";
 
 const Graph = ({ data }) => {
+  // Extract titles and weeks from the data
   const titles = Object.keys(data.graphData).map(
     (key) => data.graphData[key].title
   );
-  const weeks = Object.keys(data.graphData);
 
-  // Generalized extraction of items for each week
-  const weekItems = weeks.map((week) => {
-    return Object.values(data.graphData[week].items);
-  });
+  // Generate the Dateset for the graph
+  const datasets = generateDataset(data);
 
-  // update the weekItems to remove the "Balance" item
-  const updatedWeekItems = weekItems.map((items) =>
-    items.filter((item) => item.title !== "Balance")
-  );
-
-  // Matching items by title and forming the datasets, also make sure to handle all the week items and not just 2 weeks
-  const dynamicMergedData = updatedWeekItems[0].map((item, index) => {
-    const matchingItems = updatedWeekItems.map((items) =>
-      items.find((i) => i.title === item.title)
-    );
-    return {
-      title: item.title,
-      values: matchingItems.map((i) => (i ? i.value : 0)),
-    };
-  });
-
-  // // Extracting titles and values for both weeks
-  // const week37Items = Object.values(data.graphData["WEEK 37"].items);
-  // const week38Items = Object.values(data.graphData["WEEK 38"].items);
-
-  // // remove the "Balance" item from the lists
-  // const updatedWeek37Items = week37Items.filter(
-  //   (item) => item.title !== "Balance"
-  // );
-
-  // const updatedWeek38Items = week38Items.filter(
-  //   (item) => item.title !== "Balance"
-  // );
-
-  // // Matching items by title and forming the datasets
-  // const mergedData = updatedWeek37Items.map((item37) => {
-  //   const matchingItem38 = updatedWeek38Items.find(
-  //     (item38) => item38.title === item37.title
-  //   );
-  //   return {
-  //     title: item37.title,
-  //     values: [item37.value, matchingItem38 ? matchingItem38.value : 0],
-  //   };
-  // });
-
-  const vibrantColors = [
-    "rgba(255, 99, 132, 1)", // Red
-    "rgba(54, 162, 235, 1)", // Blue
-  ];
-
-  // Generate datasets with vibrant colors and no border color
-  const datasets = dynamicMergedData.map((item, index) => ({
-    label: `${item.title}`,
-    data: item.values, // [value from week37, value from week38]
-    backgroundColor: vibrantColors[index % vibrantColors.length], // Cycle through vibrant colors
-    borderColor: vibrantColors[index % vibrantColors.length], // No border color
-    borderJoinStyle: "round",
-    borderWidth: 2, // No border color, only a small border width to separate bars if needed
-    yAxisID: index === 0 ? "y" : "y1", // Assign y-axis based on index
-  }));
-
-  console.log("Dataset", datasets);
-
+  // Create a reference to the canvas element
   const chartRef = useRef(null);
 
+  // Create the chart when the component mounts
   useEffect(() => {
     const ctx = chartRef.current.getContext("2d");
 
@@ -81,6 +24,7 @@ const Graph = ({ data }) => {
       datasets: datasets, // Use dynamic datasets
     };
 
+    // Define the chart configuration
     const config = {
       type: "line",
       data: chartData,
