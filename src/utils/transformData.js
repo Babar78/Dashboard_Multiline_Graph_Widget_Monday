@@ -30,8 +30,6 @@ export const transformData = (mondayResData) => {
     });
   });
 
-  console.log("Final Graph Data", graphData);
-
   // Function to calculate and add "91 and Up %" to both weeks
   const calculateAndAddPercentage = (data) => {
     // Loop through each week in the data object
@@ -52,8 +50,6 @@ export const transformData = (mondayResData) => {
 
   // Call the function to add the percentage to the graph data
   calculateAndAddPercentage(graphData);
-
-  console.log("Final Graph Data with Percentage", graphData);
 
   return {
     graphData,
