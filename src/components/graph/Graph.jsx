@@ -10,8 +10,14 @@ const Graph = ({ data }) => {
   const week37Items = Object.values(data.graphData["WEEK 37"].items);
   const week38Items = Object.values(data.graphData["WEEK 38"].items);
 
-  const updatedWeek37Items = week37Items.sort((a, b) => a.value - b.value);
-  const updatedWeek38Items = week38Items.sort((a, b) => a.value - b.value);
+  // remove the "Balance" item from the lists
+  const updatedWeek37Items = week37Items.filter(
+    (item) => item.title !== "Balance"
+  );
+
+  const updatedWeek38Items = week38Items.filter(
+    (item) => item.title !== "Balance"
+  );
 
   // Matching items by title and forming the datasets
   const mergedData = updatedWeek37Items.map((item37) => {
@@ -26,11 +32,7 @@ const Graph = ({ data }) => {
 
   const vibrantColors = [
     "rgba(255, 99, 132, 1)", // Red
-    "rgba(54, 162, 235, 1)", // Blue
-    "rgba(255, 206, 86, 1)", // Yellow
-    "rgba(75, 192, 192, 1)", // Green
-    "rgba(153, 102, 255, 1)", // Purple
-    "rgba(255, 159, 64, 1)", // Orange
+    "rgba(54, 162, 235, 1)",
   ];
 
   // Generate datasets with vibrant colors and no border color
@@ -38,8 +40,13 @@ const Graph = ({ data }) => {
     label: `${item.title}`,
     data: item.values, // [value from week37, value from week38]
     backgroundColor: vibrantColors[index % vibrantColors.length], // Cycle through vibrant colors
-    borderWidth: 1, // No border color, only a small border width to separate bars if needed
+    borderColor: vibrantColors[index % vibrantColors.length], // No border color
+    borderJoinStyle: "round",
+    borderWidth: 2, // No border color, only a small border width to separate bars if needed
+    yAxisID: index === 0 ? "y" : "y1", // Assign y-axis based on index
   }));
+
+  console.log("Dataset", datasets);
 
   const chartRef = useRef(null);
 
@@ -53,18 +60,38 @@ const Graph = ({ data }) => {
     };
 
     const config = {
-      type: "bar",
+      type: "line",
       data: chartData,
       options: {
-        scales: {
-          x: {
-            stacked: true,
-          },
-          y: {
-            beginAtZero: true,
+        responsive: true,
+        interaction: {
+          mode: "index",
+          intersect: false,
+        },
+        stacked: false,
+        plugins: {
+          title: {
+            display: true,
+            text: "Multiple Y-Axis Line Chart",
           },
         },
-        responsive: true,
+        scales: {
+          y: {
+            type: "linear",
+            display: true,
+            position: "left",
+          },
+          y1: {
+            type: "linear",
+            display: true,
+            position: "right",
+
+            // grid line settings
+            grid: {
+              drawOnChartArea: false, // only want the grid lines for one axis to show up
+            },
+          },
+        },
       },
     };
 
@@ -76,7 +103,7 @@ const Graph = ({ data }) => {
   }, [data]);
 
   return (
-    <div style={{ width: "70vw", margin: "0 auto" }}>
+    <div style={{ width: "70vw", margin: "0 auto", backgroundColor: "white" }}>
       <canvas
         ref={chartRef}
         style={{ width: "100%", height: "500px" }}

@@ -34,7 +34,7 @@ const App = () => {
                 title
               }
               id
-              column_values(ids: ["numbers__1","numbers_3__1", "numbers_2__1", "numbers_1__1", "numbers7__1", "numbers8__1"]) {
+              column_values(ids: ["numbers__1","numbers_3__1"]) {
                 column {
                   title
                 }
@@ -70,7 +70,7 @@ const App = () => {
                 title
               }
               id
-              column_values(ids: ["numbers__1","numbers_3__1", "numbers_2__1", "numbers_1__1", "numbers7__1", "numbers8__1"]) {
+              column_values(ids: ["numbers__1","numbers_3__1"]) {
                 column {
                   title
                 }

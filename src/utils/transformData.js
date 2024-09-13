@@ -30,6 +30,31 @@ export const transformData = (mondayResData) => {
     });
   });
 
+  console.log("Final Graph Data", graphData);
+
+  // Function to calculate and add "91 and Up %" to both weeks
+  const calculateAndAddPercentage = (data) => {
+    // Loop through each week in the data object
+    Object.keys(data).forEach((week) => {
+      const weekData = data[week];
+      const { "91 and Up": up91, Balance } = weekData.items;
+
+      // Calculate the percentage
+      const percentage = (up91.value * 100) / Balance.value;
+
+      // Add the new key "91 and Up %" with the calculated value
+      weekData.items["91 and Up %"] = {
+        title: "91 and Up %",
+        value: Number(percentage.toFixed(2)), // Keeping two decimal places for clarity
+      };
+    });
+  };
+
+  // Call the function to add the percentage to the graph data
+  calculateAndAddPercentage(graphData);
+
+  console.log("Final Graph Data with Percentage", graphData);
+
   return {
     graphData,
   };
