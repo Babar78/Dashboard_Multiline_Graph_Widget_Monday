@@ -19,13 +19,13 @@ export const transformData = (mondayResData) => {
       if (!graphData[group].items[itemData.column.title]) {
         graphData[group].items[itemData.column.title] = {
           title: itemData.column.title,
-          value: Number(itemData.text),
+          value: itemData.text ? Number(itemData.text) : 0,
         };
       } else {
         // plus the itemData.text to the respective key's value
-        graphData[group].items[itemData.column.title].value += Number(
-          itemData.text
-        );
+        graphData[group].items[itemData.column.title].value += itemData.text
+          ? Number(itemData.text)
+          : 0;
       }
     });
   });
@@ -35,7 +35,8 @@ export const transformData = (mondayResData) => {
     // Loop through each week in the data object
     Object.keys(data).forEach((week) => {
       const weekData = data[week];
-      const { "91 and Up": up91, Balance } = weekData.items;
+
+      const { "91 and Up": up91, "Total A/R": Balance } = weekData.items;
 
       // Calculate the percentage
       const percentage = (up91.value * 100) / Balance.value;
