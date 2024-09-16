@@ -42,8 +42,8 @@ export const transformData = (mondayResData) => {
       const percentage = (up91.value * 100) / Balance.value;
 
       // Add the new key "91 and Up %" with the calculated value
-      weekData.items["91 and Up %"] = {
-        title: "91 and Up %",
+      weekData.items["Total A/R"] = {
+        title: "Total A/R",
         value: Number(percentage.toFixed(2)), // Keeping two decimal places for clarity
       };
     });
